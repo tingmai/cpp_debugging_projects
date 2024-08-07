@@ -1,0 +1,361 @@
+//import library for cin/ cout function
+#include<iostream>
+//import library for setw() function
+#include<iomanip>
+//import library for system
+#include<stdlib.h>
+using namespace std;
+
+
+
+class Major{
+	private:
+	string majorName;
+	string enrollDate;
+	double fees;
+	int duration;
+
+	public:
+	//default constructor or constructor initialization
+	Major(){
+		majorName="";
+		enrollDate="";
+		fees=0;
+		duration=0;
+	}
+	//constructor with parameters
+	Major(string m,string ed,double fe,int du){
+		majorName=m;
+		enrollDate=ed;
+		fees=fe;
+		
+	}
+	//setters and getters
+	void setMajorName(string m){
+		majorName=m;
+	}
+
+	string getMajorName(){
+		return majorName;
+	}
+
+	void setEnrollDate(string date){
+		enrollDate=date;
+	}
+	string getEnrollDate(){
+		return enrollDate;
+	}
+	
+	double getFees(){
+		return fees;
+	}
+	void setDuration(int du){
+		duration=du;
+	}
+	int getDuration(){
+		return duration;
+	}
+};
+
+
+//declare class student
+class Student:public Major{
+	private:
+		int Sr;
+		string rollNumber;
+		string name;
+		int age;
+
+
+	public:
+	//default Constructor
+	Student(){
+		Sr=1;
+		rollNumber="";
+		name="";
+		age=0;
+	}
+
+
+	//Constructor with student record parameters
+	Student(int sr,string rn,string n,int a,string mj,string ed,double fe,int
+months):Major(mj,ed,fe,months){
+		Sr=sr;
+		rollNumber=rn;
+		name=n;
+		age=a;
+	}
+
+
+
+	//setters and getters
+	int getSr(){
+		return Sr+1;
+	}
+	void setSr(int sr){
+		Sr=sr;
+	}
+	string getRollNumber(){
+		return rollNumber;
+	}
+	void setRollNumber(string rn){
+		rollNumber=rn;
+	}
+	string getName(){
+		return name;
+	}
+	void setName(string n){
+		name=n;
+	}
+
+
+	int getAge(){
+		return age;
+	}
+	void setAge(int a){
+		age=a;
+	}
+
+	//printing values to console
+	void print(int sr){
+		cout<<setw(10)<<left<<sr<<setw(10)<<left<<getRollNumber()<<setw(10)<<left<<getName()
+<<setw(10)<<left<<getAge()<<setw(20)<<left<<getMajorName()<<setw(10)<<left<<getEnrollDate()<
+<setw(10)<<left<<getFees()<<setw(10)<<left<<getDuration()<<"\n";
+	}
+};
+
+
+
+//declare object array
+static Student s[100];
+//student record array index initialization
+int index=0;
+
+
+void mainMENU(){
+	cout<<"\n INFO Myanmar College \n";
+	cout<<" Student Enrolment System \n";
+	cout<<" ----------------------------------------\n";
+	cout<<" [1] Add New Student Record \n";
+	cout<<" [2] View Student Record \n";
+	cout<<" [3] Delete Student Record \n";
+	cout<<" [4] Update Student Record \n";
+	cout<<" [5] Sort Student Record \n";
+	cout<<" [6] Exit Program \n";
+	cout<<"------------------------------------------\n";
+}
+
+int getChoice(){
+	int choice;
+	cout<<"Enter Choice:";
+	cin>>choice;
+	return choice;
+}
+
+string getRollNumber(){
+	
+	string rn;
+	cout<<"Enter Student Roll Number:";
+	getline(cin,rn);
+	return rn;
+}
+string getName(){
+	string name;
+	cout<<"Enter Studnet Name:";
+	getline(cin,name);
+	return name;
+}
+
+int getAge(){
+	int age;
+	cout<<"Enter Student Age:";
+	cin>>age;
+	return age;
+}
+string getMajor(){
+	
+	string major;
+	cout<<"Enter Student Major Name:";
+	getline(cin,major);
+	return major;
+}
+
+string getEnrollDate(){
+	string enrollDate;
+	cout<<"Enter Enroll Date:";
+	getline(cin,enrollDate);
+	return enrollDate;
+}
+double getFees(){
+	double fees;
+	cout<<"Enter Fees:";
+	cin>>fees;
+	return fees;
+}
+
+int getDuration(){
+	int duration;
+	cout<<"Enter Duration in Months:";
+	cin>>duration;
+	return duration;
+}
+void addNewStudentRecord(){
+	string rn=getRollNumber();
+	string name=getName();
+	int age=getAge();
+	string major=getMajor();
+	string enrollDate=getEnrollDate();
+	double fees=getFees();
+	int duration=getDuration();
+	s[index]=Student(0,rn,name,age,major,enrollDate,fees,duration);
+	
+}
+
+
+void viewStudentRecords(){
+	int sr=0;
+	cout<<" \n INFO Myanmar College Enrolment System \n";
+	cout<<" Veiw Student Record \n";
+	for(int i=0;i<index;i++){
+		cout<<"------------------------------------------------------------------------------------------------------
+-------------\n";
+		sr=i+1;
+		s[i].print();
+		cout<<"------------------------------------------------------------------------------------------------------
+-------------\n";
+		}
+}
+
+void deleteStudentRecords(){
+ 	string delRollNum;
+	bool found=false;
+	int delIndex=0;
+	cout<<" \n INFO Myanmar College Enrolment System \n";
+	cout<<" Deleting Student Record \n";
+	cout<<"Enter Student Roll Number to Delete Record:";
+	cin>>delRollNum;
+
+	for(int i=0;i<index;i++){
+		found=false;
+		//search and compare student roll number from the records
+		if(delRollNum==s[i].getRollNumber()){
+			//if roll number found, store the
+			delIndex=i;
+			found=true;
+			break;
+		}
+
+	}
+
+	if(found==true){
+		//clear record contents
+		s[delIndex]=Student(0,"","",0,"","",0,0);
+		cout<<"Successfully Deleted a Student Record...\n";
+	}
+	else{
+		cout<<"Sorry Student Roll Number not found...Try again...\n";
+	}
+}
+
+
+void updateStudentRecords(){
+	string updateRollNum;
+	bool found=false;
+	int updateIndex=0;
+
+	cout<<" \n INFO Myanmar College Student Enrolment System \n";
+	cout<<" Updating Student Record \n";
+	cout<<"Enter Student Roll Number to Update Record:";
+	cin>>updateRollNum;
+
+	for(int i=0;i<index;i++){
+		found=false;
+		//search and compare student roll number from the records
+		if(updateRollNum.compare(s[i].getRollNumber())==0){
+
+			//if roll number found, store the
+			updateIndex=i;
+			found=true;
+			break;
+		}
+	}
+
+	if(found==true){
+		//get New Inputs from the user and update each attributes
+		string rn=getRollNumber();
+		string name=getName();
+		int age=getAge();
+		string major=getMajor();
+		string enrollDate=getEnrollDate();
+		double fees=getFees();
+		int duration=getDuration();
+
+		s[updateIndex].setRollNumber(rn);
+		s[updateIndex].setName(name);
+		s[updateIndex].setAge(age);
+		s[updateIndex].setMajorName(major);
+		s[updateIndex].setEnrollDate(enrollDate);
+		s[updateIndex].setFees(fees);
+		s[updateIndex].setDuration(duration);
+		cout<<"Successfully updated a Student Record...\n";
+	}
+	else{
+		cout<<"Sorry Student Roll Number not found...Try again...\n";
+	}
+}
+
+
+void sortStudentRecords(){
+	
+	cout<<" \n INFO Myanmar College Student Enrolment System \n";
+	cout<<" Sorting Student Record \n";
+	for(int i=0;i<index-1;i++){
+		for(int j=i+1;j<index;j++){
+
+			if(s[i].getName().compare(s[j].getName())>0){
+				temp=s[i];
+				s[i]=s[j];
+				s[j]=temp;
+			}
+		}
+	}
+
+	cout<<"Successfully Sorted Alphabetically...";
+}
+
+
+void exitProgram(){
+	cout<<"\n-------------------------------------\n";
+	cout<<"\n Thank you very much...Exiting Now....\n";
+}
+void message(){
+	cout<<"\n\nBack to Main MENU .....\n";
+}
+
+
+int main(){
+	//the program keep looping until the user press 5
+ 	for(;;){
+
+	mainMENU();
+	switch(getChoice()){
+		case 1:addNewStudentRecord();message();system("pause");system("cls");break;
+		case 2:viewStudentRecords();message();system("pause");system("cls");break;
+		case 3:deleteStudentRecords();message();system("pause");system("cls");break;
+		case 4:updateStudentRecords();message();system("pause");system("cls");break;
+ 		case 5:sortStudentRecords();message();system("pause");system("cls");break;
+ 		case 6:exitProgram();system("pause");return 0;break;
+	}
+
+        }
+}
+
+
+
+
+
+
+
+
+
+

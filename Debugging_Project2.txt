@@ -1,0 +1,354 @@
+#include<iostream>
+#include<fstream>
+
+using namespace std;
+
+
+
+
+
+class Member{
+	    private:
+		string name;
+		string id;
+		string type;
+		int credit;
+	    
+		public:
+		//constructor
+		Member(string name,string id,string type,int credit){
+			name=name;
+			id=id;
+			type=type;
+			credit=credit;
+		}
+	
+	    virtual void add(string,string,string,int)=0;
+	    
+	    void modify(){
+	    		
+				
+				readFromFile();
+				
+				cout<<"Modify Member Data "<<endl;
+				
+				cout<<"Enter Member id to search:";
+				cin>>memberId;
+				
+				for(int i=0;i<arrIndex;i++){
+					if(memberId.compare(memberData[i])==0){
+						foundId=true;
+						found_index=i;
+						break;
+					}
+				}
+				
+				if(foundId==true){
+					
+			    	cout<<"Member Found and ready to update...."<<endl;
+				
+					cout<<"Enter New Name :";
+					cin>>newName;
+					cout<<"Enter New Type:";
+					cin>>newType;
+					cout<<"Enter New Credit:";
+					cin>>newCredit;
+				
+					memberData[found_index-1]=newName;
+					memberData[found_index+1]=newType;
+					memberData[found_index+2]=newCredit;
+				
+			    	updateFileData();
+					
+					cout<<"Modified Successfully...."<<endl;
+					
+				}
+				    	
+		}
+				
+		void display(){
+		
+			readFromFile();
+	
+			for(int i=0;i<arrIndex;i++){
+				if(i%4==0){
+						cout<<endl;
+				}
+					cout<<memberData[i]<<" ";
+			}
+			
+			cout<<"\n-----------------------"<<endl;
+		}
+		
+};
+
+class GoldMember:public Member{
+	
+	private:
+		string name;
+		string id;
+		string type;
+		int credit;
+	
+	public:
+		//constructor
+		GoldMember(string name="",string id="",string type="",int credit=0):Member(name,id,type,credit)
+		{
+			this->name=name;
+			this->id=id;
+			this->type=type;
+			this->credit=credit;
+		}
+		
+		
+		void add(string name,string id,string type,int credit){
+			saveToFile(name,id,type,credit);
+		}
+	   
+		
+		
+		
+		
+};
+
+
+class SilverMember:public Member{
+	
+	private:
+		string name;
+		string id;
+		string type;
+		int credit;
+	
+	public:
+		//constructor
+		SilverMember(string name="",string id="",string type="",int credit=0):Member(name,id,type,credit)
+		{
+			this->name=name;
+			this->id=id;
+			this->type=type;
+			this->credit=credit;
+		}
+		
+			void add(string name,string id,string type,int credit){
+			saveToFile(name,id,type,credit);
+		}
+	    
+		
+		
+	
+};
+
+class OrdinaryMember:public Member{
+	
+	private:
+		string name;
+		string id;
+		string type;
+		int credit;
+	
+	public:
+		//constructor
+		OrdinaryMember(string name="",string id="",string type="",int credit=0):Member(name,id,type,credit)
+		{
+			this->name=name;
+			this->id=id;
+			this->type=type;
+			this->credit=credit;
+		}
+		
+		void add(string name,string id,string type,int credit){
+			saveToFile(name,id,type,credit);
+		}
+	   
+		
+	
+};
+
+//application functions
+void showMenu();
+int getChoice();
+void addNewMember();
+void modifyMember();
+void displayMember();
+void exitProgram();
+
+
+int main(){
+	
+	bool loop=true;
+	while(loop){
+		showMenu();
+		switch(getChoice()){
+			case 1:addNewMember();break;
+			case 2:modifyMember();break;
+			case 3:displayMember();break;
+			case 4:exitProgram();loop=false;break;
+		}
+	}
+	
+}
+
+
+void showMenu(){
+	cout<<"-----Menu Main-----"<<endl;
+	cout<<"------------------"<<endl;
+	cout<<"[1] Add a new member to the file"<<endl;
+	cout<<"[2] Modifies the details of an existing member"<<endl;
+	cout<<"[3] Display the member details from the file"<<endl;
+	cout<<"------------------"<<endl;
+	cout<<"[4] Exit "<<endl;
+	cout<<"------------------"<<endl;
+}
+
+int getChoice(){
+	int choice;
+	cout<<"Enter Choice:";
+	cin>>choice;
+	return choice;
+}
+
+//file operation function implementations
+
+void saveToFile(string name,string id,string type,int credit){
+	
+	ofstream saveMemberData("member_data.txt",ios::app);
+	if(saveMemberData.is_open()){
+		saveMemberData<<name<<endl;
+		saveMemberData<<id<<endl;
+		saveMemberData<<type<<endl;
+		saveMemberData<<credit<<endl;
+		
+		saveMemberData.close();
+		
+	}
+	else{
+		cout<<"Could not save data...Sorry :'( "<<endl;
+	}
+}
+
+void readFromFile(){
+	arrIndex=0;
+	
+	ifstream readMemberData("member_data.txt");
+	if(readMemberData){
+		
+		string line;
+		while(getline(readMemberData,line)){
+			memberData[arrIndex]=line;
+		}
+	}
+	else{
+		cout<<"Could not read member data...Sorry... :'( "<<endl;
+	}
+}
+
+
+void updateFileData(){
+	
+	//reset all file data
+	ofstream saveMemberData("member_data.txt");
+	if(saveMemberData.is_open()){
+		
+		for(int i=0;i<arrIndex;i++){
+	
+			saveMemberData<<memberData[i]<<endl;
+		}
+		
+		saveMemberData.close();
+		
+	}
+	else{
+		cout<<"Could not save data...Sorry :'( "<<endl;
+	}
+}
+
+
+//user defined functions
+string getName(){
+	string name;
+	cout<<"Enter Member Name:";
+	cin>>name;
+	return name;
+}
+
+string getId(){
+	string id;
+	cout<<"Enter Memger Id:";
+	cin>>id;
+	return id;
+}
+
+string getType(){
+	string type;
+	cout<<"Enter Member Type:";
+	cin>>type;
+	return type;
+}
+
+int getCredit(){
+	int credit;
+	cout<<"Enter Credit Point:";
+	cin>>credit;
+	return credit;
+}
+
+void addNewMember(){
+	
+	cout<<"Add New Member"<<endl;
+	
+	string name=getName();
+	string id=getId();
+	string type=getType();
+	int credit;
+	if(type.compare("Gold")==0 || type.compare("gold")==0){
+		 credit=getCredit();
+		 
+		 Member *member=new GoldMember(name,id,type,credit);
+		 member->add(name,id,type,credit);
+	
+	}
+	else if(type.compare("Silver")==0 || type.compare("silver")==0){
+	    credit=getCredit();
+		 
+		 Member *member;
+		 SilverMember s(name,id,type,credit);
+		 member=&s;
+		 member->add(name,id,type,credit);
+	}
+	else if(type.compare("Ordinary")==0 || type.compare("ordinary")==0){
+		 credit=0;
+		 
+		 Member *member;
+		 OrdinaryMember o(name,id,type,credit);
+		 member=&o;
+		 member->add(name,id,type,credit);
+		
+	}
+	else{
+		cout<<"Type input Error..."<<endl;
+	}
+	
+	
+
+	
+	cout<<"Member Data successfully Saved..."<<endl;
+}
+
+void displayMember(){
+	
+     Member *member;
+     member->display();
+     
+}
+
+void modifyMember(){
+	Member *member;
+	member->modify();
+
+}
+
+void exitProgram(){
+	cout<<"Exit Program Now..."<<endl;
+}
+
